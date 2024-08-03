@@ -178,22 +178,31 @@ async def fetch_user_tds(user_id, force=False):
     return {}
 
 
-def progress_bar(pct):
+"""def progress_bar(pct):
     if isinstance(pct, str):
         pct = float(pct.strip('%'))
     p = min(max(pct, 0), 100)
     cFull = int((p + 5)// 10)
     p_str = '■' * cFull
     p_str += '□' * (10 - cFull)
+    return p_str"""
+def progress_bar(pct):
+    pct = float(str(pct).strip('%'))
+    p = min(max(pct, 0), 100)
+    cFull = int(p // 8)
+    cPart = int(p % 8 - 1)
+    p_str = '■' * cFull
+    if cPart >= 0:
+        p_str += ['▤', '▥', '▦', '▧', '▨', '▩', '■'][cPart]
+    p_str += '□' * (10 - cFull)
     return p_str
-
-
+    
 def source(self):
     return (sender_chat.title if (sender_chat := self.message.sender_chat) else self.message.from_user.username or self.message.from_user.id)
 
 
 def get_readable_message():
-    msg = '<b>Powered by Jisshu</b>\n\n'
+    msg = '<b>Powered by TOM BOT</b>\n\n'
     button = None
     tasks = len(download_dict)
     currentTime = get_readable_time(time() - botStartTime)
@@ -207,9 +216,9 @@ def get_readable_message():
         globals()['PAGE_NO'] = PAGES
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
         msg += f"<b>{download.status()}:</b> {escape(f'{download.name()}')}\n"
+        msg += f"<blockquote>by @{source(download)}</blockquote>\n"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_PROCESSING]:
-            msg += f"<blockquote>by {source(download)}\n"
-            msg += f"<code>{progress_bar(download.progress())}</code> {download.progress()}"
+            msg += f"<blockquote><code>{progress_bar(download.progress())}</code> {download.progress()}"
             msg += f"\n{download.processed_bytes()} of {download.size()}"
             msg += f"\nSpeed: {download.speed()}"
             msg += f'\nEstimated: {download.eta()}'
