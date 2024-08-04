@@ -202,7 +202,7 @@ def source(self):
 
 
 def get_readable_message():
-    msg = '<blockquote><b>Powered by <a href="https://t.me/JISSHU_BOTS">JISSHU</a></b></blockquote>\n\n''
+    msg = '<blockquote><b>Powered by <a href="https://t.me/JISSHU_BOTS">JISSHU</a></b></blockquote>\n\n'
     button = None
     tasks = len(download_dict)
     currentTime = get_readable_time(time() - botStartTime)
